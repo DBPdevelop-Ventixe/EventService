@@ -1,11 +1,11 @@
-﻿using Business.Models;
+﻿using Business.Interfaces;
+using Business.Models;
 using Data.Data;
-using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Net.Http.Json;
 
 namespace Business.Services;
-public class EventService(DataContext context)
+public class EventService(DataContext context) : IEventService
 {
     private readonly DataContext _context = context;
     HttpClient httpClient = new HttpClient();
@@ -32,15 +32,6 @@ public class EventService(DataContext context)
         }).ToList();
 
         // Get addresses from api
-        //for(int i = 0; i < events.Count(); i++)
-        //{
-        //    var response = await httpClient.GetAsync($"https://localhost:7193/api/addresses/{events.ElementAt(i).Id}");
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        var address = await response.Content.ReadFromJsonAsync<AddressModel>() ?? new();
-        //        events.ElementAt(i).Address = address;
-        //    }
-        //}
         foreach (var _event in events)
         {
             var response = await httpClient.GetAsync($"https://localhost:7193/api/addresses/{_event.Id}");
