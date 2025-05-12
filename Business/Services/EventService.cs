@@ -34,10 +34,17 @@ public class EventService(DataContext context) : IEventService
         // Get addresses from api
         foreach (var _event in events)
         {
-            var response = await httpClient.GetAsync($"https://localhost:7193/api/addresses/{_event.Id}");
-            if (response.IsSuccessStatusCode)
-                _event.Address = await response.Content.ReadFromJsonAsync<AddressModel>() ?? new();
+            try
+            {
+                var response = await httpClient.GetAsync($"https://localhost:7193/api/addresses/{_event.Id}");
+                if (response.IsSuccessStatusCode)
+                    _event.Address = await response.Content.ReadFromJsonAsync<AddressModel>() ?? new();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
 
+            }
         }
 
         return events ?? [];
@@ -63,9 +70,16 @@ public class EventService(DataContext context) : IEventService
         };
 
         // Get address from api
-        var response = await httpClient.GetAsync($"https://localhost:7193/api/addresses/{id}");
-        if (response.IsSuccessStatusCode)
-            _event.Address = await response.Content.ReadFromJsonAsync<AddressModel>() ?? new();
+        try
+        {
+            var response = await httpClient.GetAsync($"https://localhost:7193/api/addresses/{id}");
+            if (response.IsSuccessStatusCode)
+                _event.Address = await response.Content.ReadFromJsonAsync<AddressModel>() ?? new();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
 
         return _event;
     }
