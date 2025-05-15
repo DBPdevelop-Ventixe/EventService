@@ -1,0 +1,29 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "WebApi";
+
+
+service CategoryHandler {
+  rpc GetCategoryById(GetCategoryByIdRequest) returns (GetCategoryReply);
+  rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesReply);
+}
+
+message CategoryModel {
+	int32 id = 1;
+	string Description = 2;
+}
+
+message GetCategoryByIdRequest {
+	int32 id = 1;
+}
+
+message GetCategoryReply {
+  CategoryModel category = 1;
+}
+
+message GetCategoriesRequest {
+}
+
+message GetCategoriesReply {
+  repeated CategoryModel categories = 1;
+}

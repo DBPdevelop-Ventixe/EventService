@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "WebApi";
+
+service AddressHandler {
+  rpc GetAddressById(GetAddressByIdRequest) returns (GetAddressReply);
+}
+
+message GetAddressByIdRequest {
+	string id = 1;
+}
+
+message GetAddressReply {
+  string id = 1;
+  string Street = 2;
+  string City = 3;
+  string ZipCode = 4;
+  string State = 5;
+  string Country = 6;
+}

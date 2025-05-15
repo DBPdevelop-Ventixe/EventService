@@ -2,11 +2,24 @@ using Data.Data;
 using Business.Interfaces;
 using Business.Services;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.Design;
+using WebApi;
+using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+builder.Services.AddGrpcClient<AddressHandler.AddressHandlerClient>(x =>
+{
+    x.Address = new Uri(builder.Configuration.GetConnectionString("gRpcAddressServer")!);
+});
+builder.Services.AddGrpcClient<CategoryHandler.CategoryHandlerClient>(x =>
+{
+    x.Address = new Uri(builder.Configuration.GetConnectionString("gRpcCategoryServer")!);
+});
+builder.Services.AddScoped<AddressServices>();
+builder.Services.AddScoped<CategoryService>();
+
 
 builder.Services.AddScoped<IEventService, EventService>();
 

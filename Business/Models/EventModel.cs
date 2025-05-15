@@ -9,7 +9,11 @@ public class EventModel
     public DateTime ModifiedDate { get; set; }
     public DateTime EventDate { get; set; } 
     public string Description { get; set; } = null!;
+
+    public int CategoryId { get; set;  }
     public string Category { get; set; } = null!;
+    public int StatusId { get; set; } 
+    public string Status { get; set; } = null!;
 
     public decimal Price { get; set; } = 0;
     public int TicketsAmount { get; set; } = 0;
