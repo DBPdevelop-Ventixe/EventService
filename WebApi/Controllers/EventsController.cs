@@ -12,13 +12,25 @@ public class EventsController(EventService eventService, AddressServices address
     private readonly CategoryService _categoryService = categoryService;
     private readonly IConfiguration _configuration = configuration;
 
+
+    [HttpGet]
+    [Route("/ping")]
+    public IActionResult Ping() => Ok("pong");
+
     [HttpGet]
     [Route("/Test")]
     public async Task<IActionResult> Test()
     {
         // This is a test endpoint to check if the API is working and to get the connectionstrings
+        var constring = "";
+        try
+        {
+             constring = _configuration["TEST"];
+        }catch(Exception ex)
+        {
+            return NotFound(new { message = "Connection string was not found", error = ex.Message });
+        }
 
-        var constring = _configuration["TEST"];
         if (string.IsNullOrWhiteSpace(constring) || constring == null)
             return NotFound(new { message = "Connection string was not found" });
 
