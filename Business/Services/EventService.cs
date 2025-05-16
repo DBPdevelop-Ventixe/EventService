@@ -1,50 +1,43 @@
 ﻿using Data.Data;
-using Data.Entities;
+using Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services;
-public class EventService(DataContext context)
+public class EventService(IEventRepository eventRepository)
 {
-    private readonly DataContext _context = context;
+    private readonly IEventRepository _eventRepository = eventRepository;
 
     public async Task<IEnumerable<EventModel>> GetAllEventsAsync()
     {
-        var entities = await _context.Events
-            .Include(s => s.Sponsors)
-                .ThenInclude(es => es.Sponsor)
-            .Include(p => p.Packages)
-                .ThenInclude(ep => ep.Package)
-            .ToListAsync();
-
-        // remapping
-        List<EventModel> events = entities.Select(x => new EventModel
+        var entities = await _eventRepository.GetAllAsync();
+        if (entities != null)
         {
-            Id = x.Id,
-            ImageUrl = x.ImageUrl,
-            Name = x.Name,
-            CreateDate = x.CreateDate,
-            ModifiedDate = x.ModifiedDate,
-            EventDate = x.EventDate,
-            Description = x.Description,
-            Status = x.Status,
-            CategoryId = x.CategoryId,
-            Sponsors = x.Sponsors.Select(x => x.Sponsor).ToList(),
-            Packages = x.Packages.Select(x => x.Package).ToList(),
-        }).ToList();
+            List<EventModel> events = entities.Select(x => new EventModel
+            {
+                Id = x.Id,
+                ImageUrl = x.ImageUrl,
+                Name = x.Name,
+                CreateDate = x.CreateDate,
+                ModifiedDate = x.ModifiedDate,
+                EventDate = x.EventDate,
+                Description = x.Description,
+                Status = x.Status,
+                CategoryId = x.CategoryId,
+                Sponsors = x.Sponsors.Select(x => x.Sponsor).ToList(),
+                Packages = x.Packages.Select(x => x.Package).ToList(),
+            }).ToList();
 
-        return events ?? [];
+            return events;
+        }
+
+        return [];
     }
 
     public async Task<EventModel?> GetEventByIdAsync(string id)
     {
-        var entity = await _context.Events
-            .Include(s => s.Sponsors)
-                .ThenInclude(es => es.Sponsor)
-            .Include(p => p.Packages)
-                .ThenInclude(ep => ep.Package)
-            .FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _eventRepository.GetByIdAsync(id);
 
-        if(entity != null)
+        if (entity != null)
         {
             EventModel _event = new EventModel
             {

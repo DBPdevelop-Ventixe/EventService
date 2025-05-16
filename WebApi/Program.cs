@@ -3,6 +3,8 @@ using Business.Services;
 using Microsoft.EntityFrameworkCore;
 using WebApi;
 using WebApi.Services;
+using Data.Interfaces;
+using Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -17,10 +19,11 @@ builder.Services.AddGrpcClient<CategoryHandler.CategoryHandlerClient>(x =>
 {
     x.Address = new Uri(builder.Configuration.GetConnectionString("gRpcCategoryServer")!);
 });
+
+builder.Services.AddScoped<IEventRepository, EventRepository>();
+
 builder.Services.AddScoped<AddressServices>();
 builder.Services.AddScoped<CategoryService>();
-
-
 builder.Services.AddScoped<EventService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
