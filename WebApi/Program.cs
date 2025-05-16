@@ -33,7 +33,7 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event API V1");
-    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+    c.RoutePrefix = string.Empty;
 });
 app.UseCors(x => x
     .AllowAnyOrigin()
