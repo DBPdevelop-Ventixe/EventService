@@ -7,6 +7,7 @@ using WebApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddGrpcClient<AddressHandler.AddressHandlerClient>(x =>
 {
@@ -28,6 +29,12 @@ builder.Services.AddDbContext<DataContext>(options =>
 var app = builder.Build();
 
 app.MapOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event API V1");
+    c.RoutePrefix = string.Empty; // Set Swagger UI at the app's root
+});
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()

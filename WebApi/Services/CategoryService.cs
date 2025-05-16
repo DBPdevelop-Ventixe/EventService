@@ -5,27 +5,42 @@ public class CategoryService(CategoryHandler.CategoryHandlerClient categoryHandl
     private readonly CategoryHandler.CategoryHandlerClient _categoryHandler = categoryHandler;
     public async Task<IEnumerable<CategoryModel>> GetCategoriesAsync()
     {
-        var response = await _categoryHandler.GetCategoriesAsync(new GetCategoriesRequest());
-        if (response == null)
-            return [];
-
-        return response.Categories.Select(c => new CategoryModel
+        try
         {
-            Id = c.Id,
-            Description = c.Description
-        });
+            var response = await _categoryHandler.GetCategoriesAsync(new GetCategoriesRequest());
+            if (response == null)
+                return [];
+
+            return response.Categories.Select(c => new CategoryModel
+            {
+                Id = c.Id,
+                Description = c.Description
+            });
+        }catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return [];
+        }
     }
 
     public async Task<CategoryModel> GetCategoryByIdAsync(int id)
     {
-        var response = await _categoryHandler.GetCategoryByIdAsync(new GetCategoryByIdRequest { Id = id });
-        if (response == null)
-            return null!;
-
-        return new CategoryModel
+        try
         {
-            Id = response.Category.Id,
-            Description = response.Category.Description
-        };
+            var response = await _categoryHandler.GetCategoryByIdAsync(new GetCategoryByIdRequest { Id = id });
+            if (response == null)
+                return null!;
+
+            return new CategoryModel
+            {
+                Id = response.Category.Id,
+                Description = response.Category.Description
+            };
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            return null!;
+        }
     }
 }
