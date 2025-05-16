@@ -5,11 +5,30 @@ using WebApi.Services;
 namespace WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class EventsController(EventService eventService, AddressServices addressServices, CategoryService categoryService) : ControllerBase
+public class EventsController(EventService eventService, AddressServices addressServices, CategoryService categoryService, IConfiguration configuration) : ControllerBase
 {
     private readonly EventService _eventService = eventService;
     private readonly AddressServices _addressServices = addressServices;
     private readonly CategoryService _categoryService = categoryService;
+    private readonly IConfiguration _configuration = configuration;
+
+    [HttpGet]
+    [Route("/Test")]
+    public async Task<IActionResult> Test()
+    {
+        // This is a test endpoint to check if the API is working and to get the connectionstrings
+
+        var constring = _configuration["TEST"];
+        if (string.IsNullOrWhiteSpace(constring) || constring == null)
+            return NotFound(new { message = "Connection string was not found" });
+
+        object test = new { 
+            message = "Successfully got the connection string", 
+            connectionString = constring
+        };
+
+        return Ok(test);
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetAllEvents()
