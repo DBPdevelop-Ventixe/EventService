@@ -1,4 +1,5 @@
 ﻿using Business.Models;
+using Data.Entities;
 
 public class EventModel
 {
@@ -19,5 +20,8 @@ public class EventModel
     public int TicketsAmount { get; set; } = 0;
     public int TicketsSold { get; set; } = 0;
 
+
     public AddressModel Address { get; set; } = new AddressModel();
+    public ICollection<PackageEntity> Packages { get; set; } = new List<PackageEntity>();
+    public ICollection<SponsorEntity> Sponsors { get; set; } = new List<SponsorEntity>();
 }

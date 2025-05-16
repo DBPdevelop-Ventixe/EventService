@@ -1,5 +1,4 @@
 using Data.Data;
-using Business.Interfaces;
 using Business.Services;
 using Microsoft.EntityFrameworkCore;
 using WebApi;
@@ -21,7 +20,7 @@ builder.Services.AddScoped<AddressServices>();
 builder.Services.AddScoped<CategoryService>();
 
 
-builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<EventService>();
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("EventDatabaseConnection")));

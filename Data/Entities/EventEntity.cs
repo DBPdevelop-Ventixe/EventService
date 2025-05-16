@@ -13,14 +13,10 @@ public class EventEntity
     public DateTime EventDate { get; set; } = DateTime.Now;
     public string Description { get; set; } = null!;
 
-
     public int CategoryId { get; set; }
-
-    public int StatusId { get; set; }
     public string Status { get; set; } = null!;
 
 
-    public decimal Price { get; set; } = 0;
-    public int TicketsAmount { get; set; } = 0;
-    public int TicketsSold { get; set; } = 0;
+    public ICollection<EventPackageEntity> Packages { get; set; } = [];
+    public ICollection<EventSponsorEntity> Sponsors { get; set; } = [];
 }

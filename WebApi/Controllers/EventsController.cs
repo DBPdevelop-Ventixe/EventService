@@ -1,15 +1,13 @@
-﻿using Business.Interfaces;
-using Business.Models;
+﻿using Business.Services;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using WebApi.Services;
 
 namespace WebApi.Controllers;
 [Route("api/[controller]")]
 [ApiController]
-public class EventsController(IEventService eventService, AddressServices addressServices, CategoryService categoryService) : ControllerBase
+public class EventsController(EventService eventService, AddressServices addressServices, CategoryService categoryService) : ControllerBase
 {
-    private readonly IEventService _eventService = eventService;
+    private readonly EventService _eventService = eventService;
     private readonly AddressServices _addressServices = addressServices;
     private readonly CategoryService _categoryService = categoryService;
 
@@ -19,6 +17,9 @@ public class EventsController(IEventService eventService, AddressServices addres
         var events = await _eventService.GetAllEventsAsync();
         foreach (var _event in events)
         {
+            _event.TicketsSold = _event.Packages.Sum(x => x.TicketsSold);
+            _event.TicketsAmount = _event.Packages.Sum(x => x.TicketsAmount);
+
             // Get address details using gRPC service
             var address = await _addressServices.GetAddress(_event.Id);
             if (address != null)
@@ -39,6 +40,9 @@ public class EventsController(IEventService eventService, AddressServices addres
         var eventModel = await _eventService.GetEventByIdAsync(id);
         if (eventModel == null)
             return NotFound();
+
+        eventModel.TicketsSold = eventModel.Packages.Sum(x => x.TicketsSold);
+        eventModel.TicketsAmount = eventModel.Packages.Sum(x => x.TicketsAmount);
 
         // Get address details using gRPC service
         var address = await _addressServices.GetAddress(id);

@@ -1,15 +1,20 @@
-﻿using Business.Interfaces;
-using Data.Data;
+﻿using Data.Data;
+using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Services;
-public class EventService(DataContext context) : IEventService
+public class EventService(DataContext context)
 {
     private readonly DataContext _context = context;
 
     public async Task<IEnumerable<EventModel>> GetAllEventsAsync()
     {
-        var entities = await _context.Events.ToListAsync();
+        var entities = await _context.Events
+            .Include(s => s.Sponsors)
+                .ThenInclude(es => es.Sponsor)
+            .Include(p => p.Packages)
+                .ThenInclude(ep => ep.Package)
+            .ToListAsync();
 
         // remapping
         List<EventModel> events = entities.Select(x => new EventModel
@@ -21,12 +26,10 @@ public class EventService(DataContext context) : IEventService
             ModifiedDate = x.ModifiedDate,
             EventDate = x.EventDate,
             Description = x.Description,
-            Price = x.Price,
-            TicketsAmount = x.TicketsAmount,
-            TicketsSold = x.TicketsSold,
             Status = x.Status,
-            StatusId = x.StatusId,
-            CategoryId = x.CategoryId
+            CategoryId = x.CategoryId,
+            Sponsors = x.Sponsors.Select(x => x.Sponsor).ToList(),
+            Packages = x.Packages.Select(x => x.Package).ToList(),
         }).ToList();
 
         return events ?? [];
@@ -34,7 +37,13 @@ public class EventService(DataContext context) : IEventService
 
     public async Task<EventModel?> GetEventByIdAsync(string id)
     {
-        var entity = await _context.Events.FirstOrDefaultAsync(x => x.Id == id);
+        var entity = await _context.Events
+            .Include(s => s.Sponsors)
+                .ThenInclude(es => es.Sponsor)
+            .Include(p => p.Packages)
+                .ThenInclude(ep => ep.Package)
+            .FirstOrDefaultAsync(x => x.Id == id);
+
         if(entity != null)
         {
             EventModel _event = new EventModel
@@ -46,12 +55,10 @@ public class EventService(DataContext context) : IEventService
                 ModifiedDate = entity.ModifiedDate,
                 EventDate = entity.EventDate,
                 Description = entity.Description,
-                Price = entity.Price,
-                TicketsAmount = entity.TicketsAmount,
-                TicketsSold = entity.TicketsSold,
                 Status = entity.Status,
-                StatusId = entity.StatusId,
-                CategoryId = entity.CategoryId
+                CategoryId = entity.CategoryId,
+                Sponsors = entity.Sponsors.Select(x => x.Sponsor).ToList(),
+                Packages = entity.Packages.Select(x => x.Package).ToList(),
             };
 
             return _event;
