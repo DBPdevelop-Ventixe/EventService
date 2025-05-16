@@ -26,8 +26,9 @@ builder.Services.AddScoped<AddressServices>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<EventService>();
 
+var connectionstring = Environment.GetEnvironmentVariable("EventDatabaseConnection");
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("EventDatabaseConnection")));
+    options.UseSqlServer(connectionstring));
 
 var app = builder.Build();
 
