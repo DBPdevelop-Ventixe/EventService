@@ -18,13 +18,12 @@ builder.Services.AddScoped<EventService>();
 
 builder.Services.AddGrpcClient<AddressHandler.AddressHandlerClient>(x =>
 {
-    // Get the gRPC server URL from the appsttings. Its in ACS:GrpcAddressServer
-    x.Address = new Uri(builder.Configuration["ACS:GrpcAddressServer"]!);
+    x.Address = new Uri(builder.Configuration["Proto:GrpcAddressServer"]!);
 });
 
 builder.Services.AddGrpcClient<CategoryHandler.CategoryHandlerClient>(x =>
 {
-    x.Address = new Uri(builder.Configuration["ACS:GrpcCategoryServer"]!);
+    x.Address = new Uri(builder.Configuration["Proto:GrpcCategoryServer"]!);
 });
 
 builder.Services.AddDbContext<DataContext>(options =>
