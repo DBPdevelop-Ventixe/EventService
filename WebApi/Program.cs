@@ -15,6 +15,7 @@ builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<AddressServices>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<EventService>();
+builder.Services.AddGrpc();
 
 builder.Services.AddGrpcClient<AddressHandler.AddressHandlerClient>(x =>
 {
@@ -47,4 +48,5 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapGrpcService<EventProtoServices>();
 app.Run();

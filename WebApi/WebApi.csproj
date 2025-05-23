@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="google.protobuf" Version="3.31.0" />
+    <PackageReference Include="Grpc.Aspnetcore" Version="2.71.0" />
     <PackageReference Include="Grpc.net.client" Version="2.71.0" />
     <PackageReference Include="Grpc.net.clientfactory" Version="2.71.0" />
     <PackageReference Include="Grpc.tools" Version="2.72.0">
@@ -29,6 +30,7 @@
     <ItemGroup>
 	    <Protobuf Include="Protos\address.proto" GrpcServices="Client" />
 	    <Protobuf Include="Protos\category.proto" GrpcServices="Client" />
+	    <Protobuf Include="Protos\event.proto" GrpcServices="Server" />
     </ItemGroup>
 
 </Project>
