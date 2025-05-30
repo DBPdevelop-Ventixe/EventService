@@ -1,8 +1,8 @@
 ﻿using Data.Entities;
 
 namespace Data.Interfaces;
-public interface IEventRepository
+public interface IEventRepository : IBaseRepository<EventEntity>
 {
-    Task<IEnumerable<EventEntity>> GetAllAsync();
-    Task<EventEntity?> GetByIdAsync(string id);
+    new Task<IEnumerable<EventEntity>> GetAllAsync();
+    new Task<EventEntity?> GetByIdAsync(string id);
 }

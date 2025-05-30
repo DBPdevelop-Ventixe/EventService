@@ -31,10 +31,12 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
+builder.Services.AddScoped<IPackageRepository, PackageRepository>();
 
 builder.Services.AddScoped<AddressServices>();
 builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<PackageService>();
 builder.Services.AddGrpc();
 
 builder.Services.AddGrpcClient<AddressHandler.AddressHandlerClient>(x =>
