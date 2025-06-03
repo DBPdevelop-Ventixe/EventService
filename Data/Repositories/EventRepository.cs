@@ -16,6 +16,7 @@ public class EventRepository(DataContext context) : BaseRepository<EventEntity>(
                 .ThenInclude(es => es.Sponsor)
             .Include(p => p.Packages)
                 .ThenInclude(ep => ep.Package)
+            .AsSplitQuery()
             .ToListAsync() ?? [];
 
 
@@ -38,6 +39,7 @@ public class EventRepository(DataContext context) : BaseRepository<EventEntity>(
                 .ThenInclude(es => es.Sponsor)
             .Include(p => p.Packages)
                 .ThenInclude(ep => ep.Package)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(x => x.Id == id);
 
             return result;

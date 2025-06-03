@@ -12,7 +12,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // KeyVault configuration
 var keyVaultUri = new Uri($"https://{builder.Configuration["KeyVaultName"]}.vault.azure.net/");
-
 if (builder.Environment.IsProduction())
 {
     builder.Configuration.AddAzureKeyVault(
@@ -29,7 +28,7 @@ if (builder.Environment.IsProduction())
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
+//builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<IPackageRepository, PackageRepository>();
 
@@ -57,12 +56,12 @@ var app = builder.Build();
 
 
 app.MapOpenApi();
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event API V1");
-    c.RoutePrefix = string.Empty;
-});
+//app.UseSwagger();
+//app.UseSwaggerUI(c =>
+//{
+//    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event API V1");
+//    c.RoutePrefix = string.Empty;
+//});
 app.UseCors(x => x
     .AllowAnyOrigin()
     .AllowAnyMethod()
@@ -72,5 +71,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapGrpcService<EventProtoServices>();
-app.MapGet("/", () => "gRPC Event API");
+app.MapGet("/", () => "gRPC Event API is up and running");
 app.Run();
